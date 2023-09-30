@@ -1,14 +1,23 @@
-const fs = require('fs');
+const fs = require('fs/promises');
 
+async function read() {
+  try {
+    const data = await fs.readFile('log.txt', { encoding: 'utf8' });
+    console.log(data);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
-const logData = `
+async function write() {
+  try {
+    const logData = `
 03/22 08:54:24 INFO   :......rsvp_flow_stateMachine: state RESVED, event T1OUT
 03/22 08:54:24 TRACE  :.......rsvp_action_nHop: constructing a PATH
 03/22 08:54:24 TRACE  :.......flow_timer_start: started T1
 03/22 08:54:24 TRACE  :......rsvp_flow_stateMachine: reentering state RESVED
 03/22 08:54:24 TRACE  :.......mailslot_send: sending to (9.67.116.99:0)
-03/22 08:54:35 TRACE  :......rsvp_event_mapSession: Session=9.67.116.99:1047:6 exists
- 24 
+03/22 08:54:35 TRACE  :......rsvp_event_mapSession: Session=9.67.116.99:1047:6 exists24 
 03/22 08:54:35 EVENT  :.....api_reader: api request SENDER_WITHDRAW
 03/22 08:54:35 INFO   :.......rsvp_flow_stateMachine: state RESVED, event PATHTEAR
  25 
@@ -65,12 +74,10 @@ source=9.67.116.98:8000] ceased
 03/22 08:54:53 INFO   :......dreg_process: rc from ifaeddrg_byaddr  rc =0
 03/22 08:54:53 INFO   :.....terminator: process terminated with exit code 0
 `;
-
-// Menulis data ke file log.txt secara asinkron
-fs.writeFile('log.txt', logData, 'utf8', (err) => {
-  if (err) {
-    console.error('Terjadi kesalahan saat menulis file log.txt:', err);
-  } else {
-    console.log('Data telah berhasil ditulis ke dalam file log.txt.');
+    await fs.writeFile('log.txt', logData);
+  } catch (err) {
+    console.log(err);
   }
-});
+}
+read();
+write();
